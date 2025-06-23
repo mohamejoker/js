@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "title": "Town Media Agent AI - Smart AI Agent for Social Media Growth",
+    "description": "Boost your social media presence with our intelligent AI agent. Get real followers, likes, views, and engagement across all platforms.",
+    "keywords": "artificial intelligence, digital marketing, instagram, tiktok, youtube, followers, likes, views, AI, social media marketing"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services", 
+    "about": "About",
+    "contact": "Contact",
+    "pricing": "Pricing",
+    "language": "العربية"
+  },
+  "hero": {
+    "title": "Smart AI Agent for",
+    "highlight": "Social Media Growth", 
+    "subtitle": "Boost your social media presence with our intelligent AI agent powered by cutting-edge technology. Get real followers, likes, views, and engagement across all platforms.",
+    "cta": "Start Growing Now",
+    "secondary_cta": "Watch Demo",
+    "trusted_by": "Trusted by over 10,000 clients worldwide"
+  },
+  "services": {
+    "title": "Smart & Advanced Services",
+    "subtitle": "Comprehensive social media solutions powered by latest AI technology",
+    "instagram": {
+      "title": "Instagram Growth",
+      "description": "Real followers, likes, and natural engagement"
+    },
+    "tiktok": {
+      "title": "TikTok Boost",
+      "description": "Viral content, authentic views, and active followers"
+    },
+    "youtube": {
+      "title": "YouTube Growth", 
+      "description": "Real subscribers and longer watch time"
+    },
+    "telegram": {
+      "title": "Telegram Members",
+      "description": "Active channel and group subscribers"
+    },
+    "snapchat": {
+      "title": "Snapchat Growth",
+      "description": "Story views, friends, and engagement"
+    },
+    "facebook": {
+      "title": "Facebook Growth",
+      "description": "Real followers, likes, and shares"
+    },
+    "twitter": {
+      "title": "Twitter Growth",
+      "description": "Followers, likes, and retweets"
+    },
+    "spotify": {
+      "title": "Spotify Growth",
+      "description": "Listeners, followers, and plays"
+    },
+    "soundcloud": {
+      "title": "SoundCloud Growth", 
+      "description": "Music plays, followers, and likes"
+    },
+    "ads": {
+      "title": "Smart Ads",
+      "description": "AI-optimized advertising campaigns"
+    }
+  },
+  "stats": {
+    "title": "Trusted by Thousands Worldwide",
+    "subtitle": "Numbers that speak for themselves",
+    "clients": "Happy Clients",
+    "followers": "Followers Delivered", 
+    "engagement": "Engagement Rate",
+    "satisfaction": "Satisfaction Rate",
+    "growth": "Average Monthly Growth"
+  },
+  "testimonials": {
+    "title": "What Our Clients Say",
+    "subtitle": "Real results from real people around the world"
+  },
+  "features": {
+    "title": "Why Choose Town Media Agent AI?",
+    "subtitle": "Unique features that make us the first choice for social media growth",
+    "real_growth": {
+      "title": "Real & Natural Growth",
+      "description": "All followers and engagement from real, active accounts"
+    },
+    "ai_powered": {
+      "title": "AI-Powered",
+      "description": "Advanced algorithms for best results and precise targeting"
+    },
+    "safe_secure": {
+      "title": "Safe & Secure",
+      "description": "All services are safe and don't violate platform terms"
+    },
+    "24_7_support": {
+      "title": "24/7 Support",
+      "description": "Specialized support team available around the clock"
+    },
+    "fast_delivery": {
+      "title": "Fast Delivery",
+      "description": "Quick and noticeable results within hours"
+    },
+    "money_back": {
+      "title": "Money Back Guarantee",
+      "description": "Full money-back guarantee if not satisfied"
+    }
+  },
+  "chat": {
+    "title": "AI Assistant",
+    "placeholder": "Ask about our services...",
+    "suggestions": [
+      "How to grow Instagram?",
+      "Best package for TikTok?",
+      "Pricing information",
+      "Are services safe?",
+      "How long to see results?"
+    ],
+    "welcome": "Hello! How can I help you today?",
+    "typing": "Typing..."
+  },
+  "cta": {
+    "title": "Ready to Grow Your Social Media?",
+    "subtitle": "Join thousands of satisfied customers and get amazing results",
+    "button": "Start Now for Free",
+    "no_credit_card": "No credit card required"
+  },
+  "footer": {
+    "description": "Your trusted partner for social media growth with AI-powered solutions.",
+    "services_title": "Services",
+    "company_title": "Company",
+    "support_title": "Support",
+    "legal_title": "Legal",
+    "contact_title": "Contact Us",
+    "newsletter_title": "Newsletter",
+    "newsletter_desc": "Get latest updates and special offers",
+    "newsletter_placeholder": "Enter your email",
+    "newsletter_button": "Subscribe",
+    "rights": "All rights reserved.",
+    "made_with": "Made with",
+    "in": "in"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "try_again": "Try again",
+    "learn_more": "Learn more",
+    "get_started": "Get started",
+    "contact_us": "Contact us",
+    "read_more": "Read more",
+    "show_less": "Show less",
+    "coming_soon": "Coming soon",
+    "new": "New",
+    "popular": "Most popular",
+    "recommended": "Recommended"
+  }
+}
