@@ -2,205 +2,258 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getAuthToken, removeAuthToken } from '../../utils/auth';
+import { Menu, X, Sun, Moon, User, LogOut, Home, Settings, Package, BarChart3 } from 'lucide-react';
+import { useTheme } from './ThemeProvider';
+import { useToast } from './Toast';
 
-const Navigation = () => {
+const Navigation = ({ user = null }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { success } = useToast();
 
   useEffect(() => {
-    const token = getAuthToken();
-    setIsAuthenticated(!!token);
-
-    // مراقبة التمرير لتغيير شكل الشريط
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [router.asPath]);
+
   const handleLogout = () => {
-    removeAuthToken();
-    setIsAuthenticated(false);
-    router.push('/landing');
+    localStorage.removeItem('token');
+    success('تم تسجيل الخروج بنجاح');
+    router.push('/login');
   };
 
-  const menuItems = [
-    { name: 'الرئيسية', href: '/', auth: false },
-    { name: 'الخدمات', href: '/services', auth: false },
-    { name: 'لوحة التحكم', href: '/dashboard', auth: true },
-    { name: 'التقارير', href: '/reports', auth: true },
-    { name: 'الأدمن', href: '/admin', auth: 'admin' },
+  const navItems = [
+    { href: '/', label: 'الرئيسية', icon: Home },
+    { href: '/services', label: 'الخدمات', icon: Package },
+    { href: '/pricing', label: 'الأسعار', icon: BarChart3 },
+    { href: '/about', label: 'من نحن', icon: User },
+    { href: '/contact', label: 'اتصل بنا', icon: Settings },
   ];
 
-  const filteredMenuItems = menuItems.filter((item) => {
-    if (item.auth === false) return true;
-    if (item.auth === true && isAuthenticated) return true;
-    if (item.auth === 'admin' && isAuthenticated) return true; // يمكن تحسين هذا لاحقاً
-    return false;
-  });
+  const userMenuItems = user
+    ? [
+        { href: '/dashboard', label: 'لوحة التحكم', icon: Home },
+        { href: '/order', label: 'طلب جديد', icon: Package },
+        { href: '/balance', label: 'الرصيد', icon: BarChart3 },
+      ]
+    : [];
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
-      }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+      }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link
-              href="/"
-              className="text-2xl font-bold text-white hover:text-blue-400 transition-colors"
+          <Link href="/" className="flex items-center space-x-2 space-x-reverse">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center"
             >
-              Town Media
-            </Link>
-          </motion.div>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8 space-x-reverse">
-            {filteredMenuItems.map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link
-                  href={item.href}
-                  className={`text-white hover:text-blue-400 transition-colors font-medium ${
-                    router.pathname === item.href ? 'text-blue-400' : ''
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              </motion.div>
-            ))}
-
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-4 space-x-reverse">
-              {isAuthenticated ? (
-                <motion.button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  تسجيل الخروج
-                </motion.button>
-              ) : (
-                <>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Link
-                      href="/login"
-                      className="px-4 py-2 text-white hover:text-blue-400 transition-colors"
-                    >
-                      دخول
-                    </Link>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Link
-                      href="/register"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                    >
-                      تسجيل
-                    </Link>
-                  </motion.div>
-                </>
-              )}
+              <span className="text-white font-bold text-xl">T</span>
+            </motion.div>
+            <div className="hidden sm:block">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Town Media</h1>
+              <p className="text-xs text-gray-600 dark:text-gray-400">وكالة التسويق الرقمي</p>
             </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8 space-x-reverse">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
+                  router.pathname === item.href
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                {item.label}
+                {router.pathname === item.href && (
+                  <motion.div
+                    layoutId="navbar-active"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
+                  />
+                )}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop Actions */}
+          <div className="hidden lg:flex items-center space-x-4 space-x-reverse">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            {user ? (
+              <div className="relative group">
+                <button className="flex items-center space-x-2 space-x-reverse p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  <User size={20} className="text-gray-600 dark:text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {user.name || 'المستخدم'}
+                  </span>
+                </button>
+
+                <div className="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                  {userMenuItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center space-x-2 space-x-reverse px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors first:rounded-t-lg"
+                    >
+                      <item.icon size={16} />
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                  <hr className="border-gray-200 dark:border-gray-700" />
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2 space-x-reverse w-full px-4 py-3 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-b-lg"
+                  >
+                    <LogOut size={16} />
+                    <span>تسجيل الخروج</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-3 space-x-reverse">
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                  تسجيل الدخول
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-all"
+                >
+                  إنشاء حساب
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
-          <motion.button
-            className="md:hidden text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="w-6 h-6 flex flex-col justify-center items-center">
-              <motion.span
-                className={`w-6 h-0.5 bg-white block transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1' : ''}`}
-              />
-              <motion.span
-                className={`w-6 h-0.5 bg-white block mt-1 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}
-              />
-              <motion.span
-                className={`w-6 h-0.5 bg-white block mt-1 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1' : ''}`}
-              />
-            </div>
-          </motion.button>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              className="md:hidden"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
+          <div className="flex items-center space-x-3 space-x-reverse lg:hidden">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              <div className="py-4 space-y-4 bg-gray-800/95 backdrop-blur-md rounded-lg mt-2">
-                {filteredMenuItems.map((item, index) => (
-                  <motion.div
-                    key={item.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Link
-                      href={item.href}
-                      className={`block px-4 py-2 text-white hover:text-blue-400 transition-colors ${
-                        router.pathname === item.href ? 'text-blue-400 bg-blue-900/30' : ''
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                ))}
-
-                <div className="px-4 py-2 space-y-2">
-                  {isAuthenticated ? (
-                    <button
-                      onClick={handleLogout}
-                      className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                    >
-                      تسجيل الخروج
-                    </button>
-                  ) : (
-                    <>
-                      <Link
-                        href="/login"
-                        className="block w-full px-4 py-2 text-center text-white hover:text-blue-400 transition-colors border border-white/20 rounded-lg"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        دخول
-                      </Link>
-                      <Link
-                        href="/register"
-                        className="block w-full px-4 py-2 text-center bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        تسجيل
-                      </Link>
-                    </>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
+          >
+            <div className="container mx-auto px-4 py-6">
+              {/* Navigation Items */}
+              <div className="space-y-2 mb-6">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-lg transition-colors ${
+                      router.pathname === item.href
+                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    <item.icon size={20} />
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+
+              {/* User Section */}
+              {user ? (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                  <div className="flex items-center space-x-3 space-x-reverse mb-4 px-4">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                      <User size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {user.name || 'المستخدم'}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{user.email}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 mb-4">
+                    {userMenuItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex items-center space-x-3 space-x-reverse px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                      >
+                        <item.icon size={20} />
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-3 space-x-reverse w-full px-4 py-3 text-red-600 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    <LogOut size={20} />
+                    <span>تسجيل الخروج</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-3">
+                  <Link
+                    href="/login"
+                    className="flex items-center justify-center w-full px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    تسجيل الدخول
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="flex items-center justify-center w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all"
+                  >
+                    إنشاء حساب
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 };

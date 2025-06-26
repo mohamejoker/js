@@ -1,50 +1,53 @@
+import '../styles/globals.css';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { appWithTranslation } from 'next-i18next';
-import Head from 'next/head';
-import '../styles/globals.css';
+import ErrorBoundary from '../components/common/ErrorBoundary';
+import { ThemeProvider } from '../components/common/ThemeProvider';
+import { ToastProvider } from '../components/common/Toast';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const { locale } = router;
 
   useEffect(() => {
-    // Set document direction based on locale
-    document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = locale;
-  }, [locale]);
+    // تحسين الأداء على الأجهزة المحمولة
+    const handleRouteChange = () => {
+      // إخفاء شريط العنوان على Safari Mobile
+      if (typeof window !== 'undefined' && window.scrollY === 0) {
+        window.scrollTo(0, 1);
+      }
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
+  useEffect(() => {
+    // تحسين الأداء بمنع التمرير المطاطي على iOS
+    const preventBounce = (e) => {
+      if (e.target === document.body) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('touchmove', preventBounce, { passive: false });
+    return () => {
+      document.removeEventListener('touchmove', preventBounce);
+    };
+  }, []);
 
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0f172a" />
-        <link rel="icon" href="/favicon.ico" />
-        
-        {/* Preload critical fonts */}
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-          as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
-        />
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
-          as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
-        />
-        
-        {/* DNS prefetch for external domains */}
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        <link rel="dns-prefetch" href="//images.unsplash.com" />
-        <link rel="dns-prefetch" href="//images.pexels.com" />
-      </Head>
-      
-      <Component {...pageProps} />
-    </>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <ToastProvider>
+          <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+            <Component {...pageProps} />
+          </div>
+        </ToastProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
-export default appWithTranslation(MyApp);
+export default MyApp;
