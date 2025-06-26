@@ -1,286 +1,523 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { motion, AnimatePresence } from 'framer-motion';
+import Navigation from '../components/common/Navigation';
+import Footer from '../components/common/Footer';
+import AnimatedCounter from '../components/ui/AnimatedCounter';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import { useToast } from '../components/common/Toast';
 import {
-  Star, Users, Zap, Shield, TrendingUp, Globe, CheckCircle, ArrowRight, Play, Award, Clock, Target, MessageSquare
-} from "lucide-react";
+  Play,
+  Star,
+  Shield,
+  Zap,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  ArrowRight,
+  Instagram,
+  Facebook,
+  Youtube,
+  MessageSquare,
+  Heart,
+  Eye,
+} from 'lucide-react';
 
-const Link = ({ href, children, className = '', ...props }) => (
-  <a href={href} className={className} {...props}>{children}</a>
-);
-const twMerge = (...classes) => classes.filter(Boolean).join(' ');
+export default function Landing() {
+  const router = useRouter();
+  const { success } = useToast();
+  const [activeService, setActiveService] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
 
-const Button = React.forwardRef(({ className, variant = "default", size = "default", ...props }, ref) => {
-  let baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50";
-  if (size === "lg") baseClasses = twMerge(baseClasses, "h-11 px-8 py-4");
-  else baseClasses = twMerge(baseClasses, "h-9 px-4 py-2");
-  if (variant === "ghost") baseClasses = twMerge(baseClasses, "hover:bg-gray-100 hover:text-gray-900");
-  else if (variant === "outline") baseClasses = twMerge(baseClasses, "border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900");
-  else baseClasses = twMerge(baseClasses, "bg-blue-600 text-white shadow hover:bg-blue-700");
-  const finalClasses = twMerge(baseClasses, className);
-  return <button className={finalClasses} ref={ref} {...props}>{props.children}</button>;
-});
-Button.displayName = "Button";
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
-const Card = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={twMerge("bg-white rounded-2xl shadow-lg", className)} {...props} />
-));
-Card.displayName = "Card";
-const CardContent = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={twMerge("p-6", className)} {...props} />
-));
-CardContent.displayName = "CardContent";
-const Badge = ({ children, className = "" }) => (
-  <span className={twMerge("inline-block rounded-full font-bold", className)}>{children}</span>
-);
-const Logo = ({ size = "sm", variant }) => {
-  const textColorClass = variant === 'white' ? 'text-white' : 'text-blue-600';
-  const fontSizeClass = size === 'sm' ? 'text-2xl' : 'text-3xl';
-  return <span className={`font-black ${fontSizeClass} ${textColorClass}`}>MyApp</span>;
-};
-const TrustBadges = ({ variant = "horizontal", showAll = false }) => {
-  const badges = [
-    { icon: Shield, title: "آمن 100%", description: "حماية كاملة لحسابك", color: "text-green-500" },
-    { icon: Star, title: "تقييم 4.9/5", description: "من أكثر من 5000 عميل", color: "text-yellow-500" },
-    { icon: CheckCircle, title: "ضمان النتائج", description: "أو استرداد المال", color: "text-blue-500" },
-    { icon: Award, title: "الأفضل في المنطقة", description: "جائزة أفضل خدمة 2024", color: "text-purple-500" },
-    { icon: Clock, title: "دعم 24/7", description: "فريق متاح دائماً", color: "text-orange-500" },
-    { icon: Users, title: "+150,000 عميل", description: "ثقة آلاف العملاء", color: "text-indigo-500" }
+  // خدمات المنصات الاجتماعية
+  const services = [
+    {
+      platform: 'Instagram',
+      icon: Instagram,
+      color: 'from-pink-500 to-purple-600',
+      description: 'زيادة المتابعين والتفاعل',
+      services: [
+        { name: 'متابعين إنستقرام', price: '5', quantity: '1000', icon: Users },
+        { name: 'إعجابات إنستقرام', price: '2', quantity: '1000', icon: Heart },
+        { name: 'مشاهدات ريلز', price: '3', quantity: '1000', icon: Eye },
+        { name: 'تعليقات إنستقرام', price: '8', quantity: '100', icon: MessageSquare },
+      ],
+    },
+    {
+      platform: 'Facebook',
+      icon: Facebook,
+      color: 'from-blue-500 to-blue-700',
+      description: 'تعزيز صفحات الفيسبوك',
+      services: [
+        { name: 'متابعين فيسبوك', price: '4', quantity: '1000', icon: Users },
+        { name: 'إعجابات المنشورات', price: '2', quantity: '1000', icon: Heart },
+        { name: 'مشاركات المنشورات', price: '6', quantity: '500', icon: TrendingUp },
+        { name: 'مشاهدات الفيديو', price: '3', quantity: '1000', icon: Eye },
+      ],
+    },
+    {
+      platform: 'YouTube',
+      icon: Youtube,
+      color: 'from-red-500 to-red-700',
+      description: 'نمو قنوات اليوتيوب',
+      services: [
+        { name: 'مشتركين يوتيوب', price: '15', quantity: '1000', icon: Users },
+        { name: 'مشاهدات الفيديو', price: '5', quantity: '1000', icon: Eye },
+        { name: 'إعجابات الفيديو', price: '8', quantity: '1000', icon: Heart },
+        { name: 'تعليقات يوتيوب', price: '12', quantity: '100', icon: MessageSquare },
+      ],
+    },
   ];
-  const displayBadges = showAll ? badges : badges.slice(0, 4);
-  if (variant === "grid") {
-    return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {displayBadges.map((badge, i) => {
-          const Icon = badge.icon;
-          return (
-            <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-              <Icon className={`h-8 w-8 mx-auto mb-2 ${badge.color}`} />
-              <div className="text-white font-bold text-sm">{badge.title}</div>
-              <div className="text-white/70 text-xs">{badge.description}</div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-6">
-      {displayBadges.map((badge, i) => {
-        const Icon = badge.icon;
-        return (
-          <div key={i} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-            <Icon className={`h-5 w-5 ${badge.color}`} />
-            <div>
-              <div className="text-white font-semibold text-sm">{badge.title}</div>
-              <div className="text-white/70 text-xs">{badge.description}</div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
 
-function LandingPage() {
-  const features = [
-    { icon: Zap, title: "سرعة فائقة", description: "تنفيذ الطلبات في ثوانٍ معدودة" },
-    { icon: Shield, title: "أمان مضمون", description: "حماية كاملة لحسابك ومعلوماتك" },
-    { icon: Users, title: "دعم 24/7", description: "فريق دعم متاح على مدار الساعة" },
-    { icon: TrendingUp, title: "نتائج مضمونة", description: "زيادة حقيقية في المتابعين والتفاعل" },
-    { icon: Globe, title: "خدمات عالمية", description: "دعم جميع المنصات العالمية والمحلية" },
-    { icon: MessageSquare, title: "استشارات مجانية", description: "نقدم لك نصائح تسويقية مجاناً" },
-    { icon: Award, title: "جودة عالية", description: "خدماتنا معتمدة وموثوقة من آلاف العملاء" },
-    { icon: Star, title: "تقييمات ممتازة", description: "تقييمات إيجابية من مستخدمينا باستمرار" }
-  ];
+  // إحصائيات المنصة
   const stats = [
-    { value: "+50M", label: "متابع تم إضافتهم", icon: Users },
-    { value: "+2M", label: "طلب مكتمل", icon: CheckCircle },
-    { value: "99.9%", label: "معدل النجاح", icon: Target },
-    { value: "24/7", label: "دعم فوري", icon: Clock }
+    { number: 50000, label: 'عميل راضي', suffix: '+' },
+    { number: 2500000, label: 'طلب مكتمل', suffix: '+' },
+    { number: 99, label: 'معدل النجاح', suffix: '%' },
+    { number: 24, label: 'دعم فني', suffix: '/7' },
   ];
+
+  // مميزات الخدمة
+  const features = [
+    {
+      icon: Shield,
+      title: 'أمان وحماية',
+      description: 'جميع خدماتنا آمنة ولا تنتهك قوانين المنصات',
+    },
+    {
+      icon: Zap,
+      title: 'سرعة ا��تسليم',
+      description: 'نبدأ تنفيذ طلبك خلال دقائق من الطلب',
+    },
+    {
+      icon: Users,
+      title: 'جودة عالية',
+      description: 'متابعين ومتفاعلين حقيقيين من جميع أنحاء العالم',
+    },
+    {
+      icon: TrendingUp,
+      title: 'نتائج مضمونة',
+      description: 'ضمان استرداد المال إذا لم تحصل على النتائج المطلوبة',
+    },
+  ];
+
+  // آراء العملاء
+  const testimonials = [
+    {
+      name: 'أحمد محمد',
+      role: 'مؤثر رقمي',
+      content: 'خدمة ممتازة وسريعة! زاد عدد متابعيني بشكل طبيعي ومستمر.',
+      rating: 5,
+      avatar: '👨‍💼',
+    },
+    {
+      name: 'سارة أحمد',
+      role: 'صاحبة متجر إلكتروني',
+      content: 'أفضل منصة للتسويق الرقمي. النتائج فاقت توقعاتي بكثير!',
+      rating: 5,
+      avatar: '👩‍💼',
+    },
+    {
+      name: 'محمد علي',
+      role: 'منشئ محتوى',
+      content: 'دعم فني ممتاز وخدمة عملاء على مدار الساعة. أنصح بشدة!',
+      rating: 5,
+      avatar: '👨‍🎨',
+    },
+  ];
+
+  const handleStartOrder = () => {
+    success('مرحباً بك! سنوجهك لإنشاء طلب جديد');
+    router.push('/register');
+  };
+
   return (
-    <div className="min-h-screen bg-white" dir="rtl">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Logo size="sm" />
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <Link href="/login">
-                <Button variant="ghost" className="text-gray-700">تسجيل الدخول</Button>
-              </Link>
-              <Link href="/register">
-                <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-full">إنشاء حساب</Button>
-              </Link>
-            </div>
+    <>
+      <Head>
+        <title>Town Media Agent - وكالة التسويق الرقمي الرائدة</title>
+        <meta
+          name="description"
+          content="احصل على أفضل خدمات التسويق الرقمي لزيادة متابعيك وتفاعلك على جميع منصات التواصل الاجتماعي"
+        />
+        <meta name="keywords" content="تسويق رقمي, إنستقرام, فيسبوك, يوتيوب, متابعين, تفاعل" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <div className="min-h-screen bg-white dark:bg-gray-900 overflow-x-hidden">
+        <Navigation />
+
+        {/* Hero Section */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative pt-20 lg:pt-24 pb-16 lg:pb-24 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900"
+        >
+          {/* Background Effects */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-gradient-to-r from-pink-400 to-red-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-2000"></div>
           </div>
-        </div>
-      </header>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="container mx-auto px-4 py-20 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 text-lg">
-              🚀 منصة التسويق الرقمي #1 في المنطقة
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              نمو ذكي لوسائل التواصل الاجتماعي
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              خدمات احترافية لزيادة متابعيك وتفاعلك على جميع منصات التواصل الاجتماعي
-              <br />
-              بأفضل الأسعار وأعلى جودة في السوق
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-4 rounded-full shadow-lg text-white"
-                >
-                  ابدأ الآن مجاناً
-                  <ArrowRight className="mr-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/services">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-lg px-8 py-4 rounded-full border-2 border-blue-600 text-blue-600 bg-white hover:bg-gray-50"
-                >
-                  <Play className="ml-2 h-5 w-5" />
-                  استكشف الخدمات
-                </Button>
-              </Link>
-            </div>
-            {/* Trust Badges */}
-            <div className="mt-10">
-              <TrustBadges variant="horizontal" showAll />
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div key={index} className="text-center">
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 shadow-lg">
-                    <Icon className="h-8 w-8 mx-auto mb-3 text-blue-600" />
-                    <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                    <div className="text-sm text-gray-600">{stat.label}</div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Hero Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-center lg:text-right"
+              >
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Town Media
+                  </span>
+                  <br />
+                  <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-700 dark:text-gray-300">
+                    وكالة التسويق الرقمي
+                  </span>
+                </h1>
+
+                <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0">
+                  نوفر أفضل خدمات التسويق الرق��ي لزيادة متابعيك وتفاعلك على جميع منصات التواصل
+                  الاجتماعي بأسعار تنافسية وجودة عالية مضمونة
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <Button
+                    onClick={handleStartOrder}
+                    size="large"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-xl"
+                    icon={Play}
+                  >
+                    ابدأ طلبك الآن
+                  </Button>
+
+                  <Button
+                    onClick={() => router.push('/services')}
+                    variant="outline"
+                    size="large"
+                    className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 text-lg"
+                  >
+                    استكشف الخدمات
+                  </Button>
+                </div>
+              </motion.div>
+
+              {/* Hero Image/Animation */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="hidden lg:block"
+              >
+                <div className="relative">
+                  <div className="w-full h-96 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <div className="absolute inset-4 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center">
+                      <div className="text-center space-y-4">
+                        <div className="text-6xl animate-bounce">📱</div>
+                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                          تسويق ذكي
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300">نتائج مضمونة</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">
-              لماذا تختار منصتنا؟
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              نوفر لك أفضل الخدمات والأدوات لنمو حساباتك على وسائل التواصل الاجتماعي
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={index} className="h-full hover:shadow-xl transition-all duration-300 group border-0 shadow-lg">
-                  <CardContent className="p-6 text-center">
-                    <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-3 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <Icon className="h-8 w-8 text-white" />
+        </motion.section>
+
+        {/* Stats Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="py-16 bg-white dark:bg-gray-900"
+        >
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-xl p-6 shadow-lg">
+                    <div className="text-3xl lg:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                      <AnimatedCounter value={stat.number} suffix={stat.suffix} />
                     </div>
-                    <h3 className="text-xl font-semibold mb-3 text-gray-900">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </CardContent>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">{stat.label}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Services Section */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="py-20 bg-gray-50 dark:bg-gray-800"
+        >
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                خدماتنا المميزة
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                نوفر خدمات شاملة لجميع منصات التواصل الاجتماعي لتعزيز حضورك الرقمي
+              </p>
+            </div>
+
+            {/* Service Platform Tabs */}
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              {services.map((service, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveService(index)}
+                  className={`flex items-center space-x-3 space-x-reverse px-6 py-3 rounded-xl font-medium transition-all ${
+                    activeService === index
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:shadow-md'
+                  }`}
+                >
+                  <service.icon size={20} />
+                  <span>{service.platform}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Active Service Details */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeService}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="max-w-6xl mx-auto"
+              >
+                <Card className="p-8 shadow-xl">
+                  <div className="text-center mb-8">
+                    <div
+                      className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r ${services[activeService].color} mb-4`}
+                    >
+                      {React.createElement(services[activeService].icon, {
+                        size: 40,
+                        className: 'text-white',
+                      })}
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                      خدمات {services[activeService].platform}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {services[activeService].description}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {services[activeService].services.map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow"
+                      >
+                        <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-lg mb-4">
+                          <item.icon size={24} className="text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <h4 className="font-bold text-gray-900 dark:text-white mb-2">
+                          {item.name}
+                        </h4>
+                        <div className="flex items-center justify-between">
+                          <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            ${item.price}
+                          </span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {item.quantity}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="text-center mt-8">
+                    <Button
+                      onClick={() => router.push('/services')}
+                      size="large"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4"
+                      icon={ArrowRight}
+                    >
+                      عرض جميع خدمات {services[activeService].platform}
+                    </Button>
+                  </div>
                 </Card>
-              );
-            })}
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
-      </section>
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h2 className="text-4xl font-bold mb-6">
-              ابدأ رحلتك نحو النجاح اليوم
+        </motion.section>
+
+        {/* Features Section */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="py-20 bg-white dark:bg-gray-900"
+        >
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                لماذا تختار Town Media؟
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                نحن نقدم خدمات تسويق رقمي متميزة بمعايير عالية الجودة
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {features.map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <Card className="p-6 h-full hover:shadow-xl transition-shadow">
+                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-full mb-4 mx-auto">
+                      <feature.icon size={32} className="text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Testimonials Section */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="py-20 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900"
+        >
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                ماذا يقول عملاؤنا؟
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">
+                آراء حقيقية من عملائنا الراضين
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="p-6 h-full">
+                    <div className="flex items-center mb-4">
+                      <div className="text-3xl ml-3">{testimonial.avatar}</div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 dark:text-white">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {testimonial.role}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} size={16} className="text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+
+                    <p className="text-gray-700 dark:text-gray-300 italic">
+                      "{testimonial.content}"
+                    </p>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+
+        {/* CTA Section */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="py-20 bg-gradient-to-r from-blue-600 to-purple-600"
+        >
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              جاهز لتنمية حضورك الرقمي؟
             </h2>
-            <p className="text-xl mb-8 opacity-90">
-              انضم إلى آلاف العملاء الذين حققوا نجاحاً باهراً مع خدماتنا
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              انضم إلى آلاف العملاء الراضين واحصل على أفضل خدمات التسويق الرقمي
             </p>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 rounded-full"
-                >
-                  ابدأ مجاناً الآن
-                  <ArrowRight className="mr-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/services">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-full border-2"
-                >
-                  استكشف الخدمات
-                </Button>
-              </Link>
+              <Button
+                onClick={handleStartOrder}
+                size="extraLarge"
+                variant="secondary"
+                className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
+                icon={Play}
+              >
+                ابدأ الآن مجاناً
+              </Button>
+
+              <Button
+                onClick={() => router.push('/contact')}
+                size="extraLarge"
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg"
+              >
+                تواصل معنا
+              </Button>
             </div>
           </div>
-        </div>
-      </section>
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-right">
-            <Logo variant="white" size="sm" />
-            <div className="text-gray-400 mt-4 md:mt-0">
-              © 2025 جميع الحقوق محفوظة
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row gap-4 mt-6 justify-center">
-            <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
-              من نحن
-            </Link>
-            <Link href="/services" className="text-gray-400 hover:text-white transition-colors">
-              خدماتنا
-            </Link>
-            <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-              اتصل بنا
-            </Link>
-            <Link href="/faq" className="text-gray-400 hover:text-white transition-colors">
-              الأسئلة الشائعة
-            </Link>
-            <Link href="/partners" className="text-gray-400 hover:text-white transition-colors">
-              شركاؤنا
-            </Link>
-            <Link href="/blog" className="text-gray-400 hover:text-white transition-colors">
-              المدونة
-            </Link>
-            <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">
-              الباقات والأسعار
-            </Link>
-          </div>
-        </div>
-      </footer>
-      <div className="flex flex-col md:flex-row gap-6 mt-8 justify-center items-center">
-        <a href="/services" className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 text-lg font-bold shadow-lg transition-transform duration-200">عرض الخدمات</a>
-        <a href="/dashboard" className="px-8 py-4 rounded-full bg-purple-600 hover:bg-purple-700 text-lg font-bold shadow-lg transition-transform duration-200">لوحة التحكم</a>
-        <a href="/reports" className="px-8 py-4 rounded-full bg-green-600 hover:bg-green-700 text-lg font-bold shadow-lg transition-transform duration-200">التقارير</a>
+        </motion.section>
+
+        <Footer />
       </div>
-    </div>
+    </>
   );
 }
-
-export default LandingPage;
