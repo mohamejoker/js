@@ -9,13 +9,13 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { useToast } from '../components/common/Toast';
-import { 
-  Play, 
-  Star, 
-  Shield, 
-  Zap, 
-  Users, 
-  TrendingUp, 
+import {
+  Play,
+  Star,
+  Shield,
+  Zap,
+  Users,
+  TrendingUp,
   CheckCircle,
   ArrowRight,
   Instagram,
@@ -23,7 +23,7 @@ import {
   Youtube,
   MessageSquare,
   Heart,
-  Eye
+  Eye,
 } from 'lucide-react';
 
 export default function Landing() {
@@ -89,23 +89,23 @@ export default function Landing() {
     {
       icon: Shield,
       title: 'أمان وحماية',
-      description: 'جميع خدماتنا آمنة ولا تنتهك قوانين المنصات'
+      description: 'جميع خدماتنا آمنة ولا تنتهك قوانين المنصات',
     },
     {
       icon: Zap,
-      title: 'سرعة التسليم',
-      description: 'نبدأ تنفيذ طلبك خلال دقائق من الطلب'
+      title: 'سرعة ا��تسليم',
+      description: 'نبدأ تنفيذ طلبك خلال دقائق من الطلب',
     },
     {
       icon: Users,
       title: 'جودة عالية',
-      description: 'متابعين ومتفاعلين حقيقيين من جميع أنحاء العالم'
+      description: 'متابعين ومتفاعلين حقيقيين من جميع أنحاء العالم',
     },
     {
       icon: TrendingUp,
       title: 'نتائج مضمونة',
-      description: 'ضمان استرداد المال إذا لم تحصل على النتائج المطلوبة'
-    }
+      description: 'ضمان استرداد المال إذا لم تحصل على النتائج المطلوبة',
+    },
   ];
 
   // آراء العملاء
@@ -115,22 +115,22 @@ export default function Landing() {
       role: 'مؤثر رقمي',
       content: 'خدمة ممتازة وسريعة! زاد عدد متابعيني بشكل طبيعي ومستمر.',
       rating: 5,
-      avatar: '👨‍💼'
+      avatar: '👨‍💼',
     },
     {
       name: 'سارة أحمد',
       role: 'صاحبة متجر إلكتروني',
       content: 'أفضل منصة للتسويق الرقمي. النتائج فاقت توقعاتي بكثير!',
       rating: 5,
-      avatar: '👩‍💼'
+      avatar: '👩‍💼',
     },
     {
       name: 'محمد علي',
       role: 'منشئ محتوى',
       content: 'دعم فني ممتاز وخدمة عملاء على مدار الساعة. أنصح بشدة!',
       rating: 5,
-      avatar: '👨‍🎨'
-    }
+      avatar: '👨‍🎨',
+    },
   ];
 
   const handleStartOrder = () => {
@@ -142,9 +142,15 @@ export default function Landing() {
     <>
       <Head>
         <title>Town Media Agent - وكالة التسويق الرقمي الرائدة</title>
-        <meta name="description" content="احصل على أفضل خدمات التسويق الرقمي لزيادة متابعيك وتفاعلك على جميع منصات التواصل الاجتماعي" />
+        <meta
+          name="description"
+          content="احصل على أفضل خدمات التسويق الرقمي لزيادة متابعيك وتفاعلك على جميع منصات التواصل الاجتماعي"
+        />
         <meta name="keywords" content="تسويق رقمي, إنستقرام, فيسبوك, يوتيوب, متابعين, تفاعل" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -152,7 +158,7 @@ export default function Landing() {
         <Navigation />
 
         {/* Hero Section */}
-        <motion.section 
+        <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: isVisible ? 1 : 0 }}
           transition={{ duration: 0.8 }}
@@ -182,10 +188,10 @@ export default function Landing() {
                     وكالة التسويق الرقمي
                   </span>
                 </h1>
-                
+
                 <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0">
-                  نوفر أفضل خدمات التسويق الرق��ي لزيادة متابعيك وتفاعلك على جميع منصات التواصل الاجتماعي 
-                  بأسعار تنافسية وجودة عالية مضمونة
+                  نوفر أفضل خدمات التسويق الرق��ي لزيادة متابعيك وتفاعلك على جميع منصات التواصل
+                  الاجتماعي بأسعار تنافسية وجودة عالية مضمونة
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -197,7 +203,7 @@ export default function Landing() {
                   >
                     ابدأ طلبك الآن
                   </Button>
-                  
+
                   <Button
                     onClick={() => router.push('/services')}
                     variant="outline"
@@ -224,9 +230,7 @@ export default function Landing() {
                         <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
                           تسويق ذكي
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-300">
-                          نتائج مضمونة
-                        </p>
+                        <p className="text-gray-600 dark:text-gray-300">نتائج مضمونة</p>
                       </div>
                     </div>
                   </div>
@@ -259,9 +263,7 @@ export default function Landing() {
                     <div className="text-3xl lg:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
                       <AnimatedCounter value={stat.number} suffix={stat.suffix} />
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300 font-medium">
-                      {stat.label}
-                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">{stat.label}</p>
                   </div>
                 </motion.div>
               ))}
@@ -317,8 +319,13 @@ export default function Landing() {
               >
                 <Card className="p-8 shadow-xl">
                   <div className="text-center mb-8">
-                    <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r ${services[activeService].color} mb-4`}>
-                      <services[activeService].icon size={40} className="text-white" />
+                    <div
+                      className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r ${services[activeService].color} mb-4`}
+                    >
+                      {React.createElement(services[activeService].icon, {
+                        size: 40,
+                        className: 'text-white',
+                      })}
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                       خدمات {services[activeService].platform}
@@ -406,9 +413,7 @@ export default function Landing() {
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      {feature.description}
-                    </p>
+                    <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
                   </Card>
                 </motion.div>
               ))}
@@ -455,13 +460,13 @@ export default function Landing() {
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} size={16} className="text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    
+
                     <p className="text-gray-700 dark:text-gray-300 italic">
                       "{testimonial.content}"
                     </p>
@@ -487,7 +492,7 @@ export default function Landing() {
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
               انضم إلى آلاف العملاء الراضين واحصل على أفضل خدمات التسويق الرقمي
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 onClick={handleStartOrder}
@@ -498,7 +503,7 @@ export default function Landing() {
               >
                 ابدأ الآن مجاناً
               </Button>
-              
+
               <Button
                 onClick={() => router.push('/contact')}
                 size="extraLarge"
