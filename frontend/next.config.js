@@ -10,12 +10,6 @@ const nextConfig = {
 
   // Enable experimental features
   experimental: {
-    // Enable modern bundling for better performance
-    modernBundling: true,
-
-    // Enable optimized images
-    optimizeCss: true,
-
     // Enable server components
     serverComponentsExternalPackages: [],
   },
@@ -28,12 +22,6 @@ const nextConfig = {
 
     // Image formats
     formats: ['image/webp', 'image/avif'],
-
-    // Quality settings
-    quality: 80,
-
-    // Enable placeholder blur for better UX
-    placeholder: 'blur',
 
     // Allowed domains for external images
     domains: [
