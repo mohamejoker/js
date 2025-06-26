@@ -8,7 +8,8 @@
     "frontend": "cd frontend && npm run dev",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "build": "cd frontend && npm run build",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "setup": "npm run install-all"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -16,5 +17,15 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
-  }
+  },
+  "keywords": [
+    "town-media",
+    "social-media",
+    "agency",
+    "fullstack",
+    "nextjs",
+    "nodejs"
+  ],
+  "author": "Town Media Team",
+  "license": "MIT"
 }
