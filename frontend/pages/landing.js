@@ -1,286 +1,205 @@
-import React from "react";
-import {
-  Star, Users, Zap, Shield, TrendingUp, Globe, CheckCircle, ArrowRight, Play, Award, Clock, Target, MessageSquare
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
+import Navigation from '../components/common/Navigation';
+import Footer from '../components/common/Footer';
+import StatsSection from '../components/ui/StatsSection';
 
-const Link = ({ href, children, className = '', ...props }) => (
-  <a href={href} className={className} {...props}>{children}</a>
-);
-const twMerge = (...classes) => classes.filter(Boolean).join(' ');
+export default function Landing() {
+  const router = useRouter();
+  const [settings, setSettings] = useState({
+    siteTitle: 'Town Media Agent',
+    mainColor: '#2563eb',
+    bgColor: '#111827',
+    welcomeText: 'منصة إدارة الخدمات الذكية للموزعين والعملاء',
+    footerText: '',
+    heroImage: '',
+  });
+  const [stats, setStats] = useState([
+    { label: 'عدد المستخدمين', value: 0 },
+    { label: 'عدد الطلبات', value: 0 },
+    { label: 'عدد الخدمات', value: 0 },
+    { label: 'إجمالي الرصيد', value: 0 },
+  ]);
 
-const Button = React.forwardRef(({ className, variant = "default", size = "default", ...props }, ref) => {
-  let baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50";
-  if (size === "lg") baseClasses = twMerge(baseClasses, "h-11 px-8 py-4");
-  else baseClasses = twMerge(baseClasses, "h-9 px-4 py-2");
-  if (variant === "ghost") baseClasses = twMerge(baseClasses, "hover:bg-gray-100 hover:text-gray-900");
-  else if (variant === "outline") baseClasses = twMerge(baseClasses, "border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900");
-  else baseClasses = twMerge(baseClasses, "bg-blue-600 text-white shadow hover:bg-blue-700");
-  const finalClasses = twMerge(baseClasses, className);
-  return <button className={finalClasses} ref={ref} {...props}>{props.children}</button>;
-});
-Button.displayName = "Button";
+  useEffect(() => {
+    // جلب إعدادات الموقع
+    fetch('/api/site-settings')
+      .then((res) => res.json())
+      .then((data) => setSettings(data))
+      .catch((err) => console.error('Error fetching settings:', err));
 
-const Card = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={twMerge("bg-white rounded-2xl shadow-lg", className)} {...props} />
-));
-Card.displayName = "Card";
-const CardContent = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={twMerge("p-6", className)} {...props} />
-));
-CardContent.displayName = "CardContent";
-const Badge = ({ children, className = "" }) => (
-  <span className={twMerge("inline-block rounded-full font-bold", className)}>{children}</span>
-);
-const Logo = ({ size = "sm", variant }) => {
-  const textColorClass = variant === 'white' ? 'text-white' : 'text-blue-600';
-  const fontSizeClass = size === 'sm' ? 'text-2xl' : 'text-3xl';
-  return <span className={`font-black ${fontSizeClass} ${textColorClass}`}>MyApp</span>;
-};
-const TrustBadges = ({ variant = "horizontal", showAll = false }) => {
-  const badges = [
-    { icon: Shield, title: "آمن 100%", description: "حماية كاملة لحسابك", color: "text-green-500" },
-    { icon: Star, title: "تقييم 4.9/5", description: "من أكثر من 5000 عميل", color: "text-yellow-500" },
-    { icon: CheckCircle, title: "ضمان النتائج", description: "أو استرداد المال", color: "text-blue-500" },
-    { icon: Award, title: "الأفضل في المنطقة", description: "جائزة أفضل خدمة 2024", color: "text-purple-500" },
-    { icon: Clock, title: "دعم 24/7", description: "فريق متاح دائماً", color: "text-orange-500" },
-    { icon: Users, title: "+150,000 عميل", description: "ثقة آلاف العملاء", color: "text-indigo-500" }
-  ];
-  const displayBadges = showAll ? badges : badges.slice(0, 4);
-  if (variant === "grid") {
-    return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {displayBadges.map((badge, i) => {
-          const Icon = badge.icon;
-          return (
-            <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-              <Icon className={`h-8 w-8 mx-auto mb-2 ${badge.color}`} />
-              <div className="text-white font-bold text-sm">{badge.title}</div>
-              <div className="text-white/70 text-xs">{badge.description}</div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+    // جلب الإحصائيات
+    fetch('/api/stats')
+      .then((res) => res.json())
+      .then((data) => setStats(data))
+      .catch((err) => console.error('Error fetching stats:', err));
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+  };
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-6">
-      {displayBadges.map((badge, i) => {
-        const Icon = badge.icon;
-        return (
-          <div key={i} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-            <Icon className={`h-5 w-5 ${badge.color}`} />
-            <div>
-              <div className="text-white font-semibold text-sm">{badge.title}</div>
-              <div className="text-white/70 text-xs">{badge.description}</div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+    <>
+      <Head>
+        <title>{settings.siteTitle}</title>
+        <meta name="description" content={settings.welcomeText} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-function LandingPage() {
-  const features = [
-    { icon: Zap, title: "سرعة فائقة", description: "تنفيذ الطلبات في ثوانٍ معدودة" },
-    { icon: Shield, title: "أمان مضمون", description: "حماية كاملة لحسابك ومعلوماتك" },
-    { icon: Users, title: "دعم 24/7", description: "فريق دعم متاح على مدار الساعة" },
-    { icon: TrendingUp, title: "نتائج مضمونة", description: "زيادة حقيقية في المتابعين والتفاعل" },
-    { icon: Globe, title: "خدمات عالمية", description: "دعم جميع المنصات العالمية والمحلية" },
-    { icon: MessageSquare, title: "استشارات مجانية", description: "نقدم لك نصائح تسويقية مجاناً" },
-    { icon: Award, title: "جودة عالية", description: "خدماتنا معتمدة وموثوقة من آلاف العملاء" },
-    { icon: Star, title: "تقييمات ممتازة", description: "تقييمات إيجابية من مستخدمينا باستمرار" }
-  ];
-  const stats = [
-    { value: "+50M", label: "متابع تم إضافتهم", icon: Users },
-    { value: "+2M", label: "طلب مكتمل", icon: CheckCircle },
-    { value: "99.9%", label: "معدل النجاح", icon: Target },
-    { value: "24/7", label: "دعم فوري", icon: Clock }
-  ];
-  return (
-    <div className="min-h-screen bg-white" dir="rtl">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Logo size="sm" />
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <Link href="/login">
-                <Button variant="ghost" className="text-gray-700">تسجيل الدخول</Button>
-              </Link>
-              <Link href="/register">
-                <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-full">إنشاء حساب</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="container mx-auto px-4 py-20 relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
+        <Navigation />
+
+        {/* Hero Section */}
+        <motion.section
+          className="relative min-h-screen flex items-center justify-center px-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 text-lg">
-              🚀 منصة التسويق الرقمي #1 في المنطقة
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              نمو ذكي لوسائل التواصل الاجتماعي
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              خدمات احترافية لزيادة متابعيك وتفاعلك على جميع منصات التواصل الاجتماعي
-              <br />
-              بأفضل الأسعار وأعلى جودة في السوق
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-4 rounded-full shadow-lg text-white"
-                >
-                  ابدأ الآن مجاناً
-                  <ArrowRight className="mr-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/services">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-lg px-8 py-4 rounded-full border-2 border-blue-600 text-blue-600 bg-white hover:bg-gray-50"
-                >
-                  <Play className="ml-2 h-5 w-5" />
-                  استكشف الخدمات
-                </Button>
-              </Link>
-            </div>
-            {/* Trust Badges */}
-            <div className="mt-10">
-              <TrustBadges variant="horizontal" showAll />
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div key={index} className="text-center">
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 shadow-lg">
-                    <Icon className="h-8 w-8 mx-auto mb-3 text-blue-600" />
-                    <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                    <div className="text-sm text-gray-600">{stat.label}</div>
-                  </div>
+            <motion.h1
+              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
+              variants={itemVariants}
+            >
+              {settings.siteTitle}
+            </motion.h1>
+
+            <motion.p
+              className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
+              variants={itemVariants}
+            >
+              {settings.welcomeText}
+            </motion.p>
+
+            <motion.div
+              className="flex flex-col md:flex-row gap-6 justify-center items-center mb-12"
+              variants={itemVariants}
+            >
+              <Link href="/login" className="group">
+                <div className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-full font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105">
+                  تسجيل الدخول
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">
-              لماذا تختار منصتنا؟
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              نوفر لك أفضل الخدمات والأدوات لنمو حساباتك على وسائل التواصل الاجتماعي
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={index} className="h-full hover:shadow-xl transition-all duration-300 group border-0 shadow-lg">
-                  <CardContent className="p-6 text-center">
-                    <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-3 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <Icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-3 text-gray-900">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h2 className="text-4xl font-bold mb-6">
-              ابدأ رحلتك نحو النجاح اليوم
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              انضم إلى آلاف العملاء الذين حققوا نجاحاً باهراً مع خدماتنا
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 rounded-full"
-                >
-                  ابدأ مجاناً الآن
-                  <ArrowRight className="mr-2 h-5 w-5" />
-                </Button>
               </Link>
-              <Link href="/services">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-full border-2"
-                >
-                  استكشف الخدمات
-                </Button>
+              <Link href="/register" className="group">
+                <div className="px-8 py-4 bg-purple-600 hover:bg-purple-700 rounded-full font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105">
+                  إنشاء حساب جديد
+                </div>
               </Link>
+              <Link href="/services" className="group">
+                <div className="px-8 py-4 border-2 border-white hover:bg-white hover:text-gray-900 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105">
+                  عرض الخدمات
+                </div>
+              </Link>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <StatsSection stats={stats} />
+            </motion.div>
+          </div>
+
+          {/* Background Animation */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+          </div>
+        </motion.section>
+
+        {/* Features Section */}
+        <motion.section
+          className="py-20 px-4"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-16">لماذا تختار منصتنا؟</h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="text-4xl mb-4">🚀</div>
+                <h3 className="text-xl font-bold mb-3">سرعة وكفاءة</h3>
+                <p className="text-gray-300">معالجة سريعة للطلبات وإدارة متقدمة للخدمات</p>
+              </motion.div>
+
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="text-4xl mb-4">🔒</div>
+                <h3 className="text-xl font-bold mb-3">أمان وموثوقية</h3>
+                <p className="text-gray-300">حماية عالية للبيانات ونظام مصادقة متقدم</p>
+              </motion.div>
+
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="text-4xl mb-4">📊</div>
+                <h3 className="text-xl font-bold mb-3">تحليلات شاملة</h3>
+                <p className="text-gray-300">تقارير مفصلة وإحصائيات في الوقت الفعلي</p>
+              </motion.div>
             </div>
           </div>
-        </div>
-      </section>
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-right">
-            <Logo variant="white" size="sm" />
-            <div className="text-gray-400 mt-4 md:mt-0">
-              © 2025 جميع الحقوق محفوظة
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row gap-4 mt-6 justify-center">
-            <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
-              من نحن
-            </Link>
-            <Link href="/services" className="text-gray-400 hover:text-white transition-colors">
-              خدماتنا
-            </Link>
-            <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-              اتصل بنا
-            </Link>
-            <Link href="/faq" className="text-gray-400 hover:text-white transition-colors">
-              الأسئلة الشائعة
-            </Link>
-            <Link href="/partners" className="text-gray-400 hover:text-white transition-colors">
-              شركاؤنا
-            </Link>
-            <Link href="/blog" className="text-gray-400 hover:text-white transition-colors">
-              المدونة
-            </Link>
-            <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">
-              الباقات والأسعار
-            </Link>
-          </div>
-        </div>
-      </footer>
-      <div className="flex flex-col md:flex-row gap-6 mt-8 justify-center items-center">
-        <a href="/services" className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 text-lg font-bold shadow-lg transition-transform duration-200">عرض الخدمات</a>
-        <a href="/dashboard" className="px-8 py-4 rounded-full bg-purple-600 hover:bg-purple-700 text-lg font-bold shadow-lg transition-transform duration-200">لوحة التحكم</a>
-        <a href="/reports" className="px-8 py-4 rounded-full bg-green-600 hover:bg-green-700 text-lg font-bold shadow-lg transition-transform duration-200">التقارير</a>
+        </motion.section>
+
+        <Footer
+          text={
+            settings.footerText ||
+            `© ${new Date().getFullYear()} ${settings.siteTitle}. جميع الحقوق محفوظة.`
+          }
+        />
       </div>
-    </div>
+
+      <style jsx>{`
+        @keyframes blob {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
+    </>
   );
 }
-
-export default LandingPage;
